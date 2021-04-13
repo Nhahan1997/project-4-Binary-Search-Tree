@@ -65,7 +65,7 @@ int main()
 	   if (i == size - 1)
 		   size++;	//expand size to read new line
 
-	   cin >> letter;
+	   cin >> letter;	//read the letter
 	   //do insert
 	   if (letter == 'I'){
 		   cin >> xCor >> yCor >> id;
@@ -73,26 +73,40 @@ int main()
 		   cout << xCor << " " << yCor << " " << id << " " << endl;
 
 	   }
+	   // do remove
 	   if (letter == 'R'){
 		   cout << "Remove: ";
-		   cin >> low >> high;
-		   cout << low << " " << high << endl;
+		   cin >> xCor >> yCor;
+		   cout << xCor << " " << yCor << endl;
+		   (*newBst).remove(xCor, yCor);
 
 	   }
+	   // do range search
 	   if (letter == 'S'){
 		   cout << "Range search" << endl;
 		   cin >> low >> high >> lowY >> highY;
-		   cout << low << " " << high;
+		   cout << low << " " << high << " ";
 		   cout << lowY << " " << highY << endl;
+		   (*newBst).rangeSearch(lowY, highY, lowY, highY);
+		   cout << endl;
 
 	   }
+	   //do find
+	   if (letter == 'F'){
+		   cin >> xCor >> yCor;
+		   cout << "Find: " << xCor << " " << yCor << endl;
+		   (*newBst).find(xCor, yCor);
+	   }
+	   //do balance the yTree
 	   if (letter == 'Y'){
 		   cout << "Y tree balance" << endl;
 		   cin >> yCor;
 		   cout << yCor << endl;
 
 	   }
+	   //print
 	   if (letter == 'P'){
+		   cout << "Print" << endl;
 		   (*newBst).print();
 	   }
 
