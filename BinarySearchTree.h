@@ -130,14 +130,14 @@ BinarySearchTree<DataType>::BinarySearchTree (const DataType& data)
 // --------------------------------------------------------------
 template <class DataType>
 void BinarySearchTree<DataType>::inOrder_xTreeDisplay(){
-	if (!this->left()->isEmpty()){
+	if (!this->left()->isEmpty()){		// if left child not null, print it by using recursive
 		this->left()->inOrder_xTreeDisplay();
 	}
-	cout << this->root() << ": " << endl;
+	cout << this->root() << ": " << endl;	//print the root
 	if (!this->yTree()->isEmpty()){
-		this->yTree()->inOrder_yTreeDisplay();
+		this->yTree()->inOrder_yTreeDisplay();	// if _yTree not null, call the inOrder_yTreeDisplay
 	}
-	if (!this->right()->isEmpty()){
+	if (!this->right()->isEmpty()){		// if right child not null, print it by using recursive
 		this->right()->inOrder_xTreeDisplay();
 	}
 }
@@ -350,16 +350,20 @@ BinarySearchTree<DataType>* BinarySearchTree<DataType>::_insert (const DataType&
 template <class DataType>
 void BinarySearchTree<DataType>::insert (const DataType& x, const DataType& y, int IDT)
 {
+	//using _find to find where x coordinate in tree, returned
+	//and store it in searchBST object
 	BinarySearchTree<DataType>* searchBST = _find(x);
-	if (searchBST->isEmpty()){
+	if (searchBST->isEmpty()){	//if searchBST is empty
+		//create a temp1 object and use _insert to return pointer from _insert into temp1
 		BinarySearchTree<DataType>* temp1 = _insert(x);
-
+		//create a yTree object as the _yTree of temp1
 		BinarySearchTree<DataType>* yTree = temp1->_yTree;
 		if (yTree == NULL){
-			yTree = new BinarySearchTree<DataType>(y);
-			yTree->ID = IDT;
+			yTree = new BinarySearchTree<DataType>(y);	//if it is null create new yTree with root is y coordinate
+			yTree->ID = IDT;	//pass the IDT to ID of x-y coordinate
 		}
-		else{
+		else{	//if searchBST is not empty
+			// just create new yTree BST pointer object and use _insert to pass the y coordinate to BST->yTree
 			BinarySearchTree<DataType>* temp2 = _insert(y);
 			temp2->ID = IDT;
 		}

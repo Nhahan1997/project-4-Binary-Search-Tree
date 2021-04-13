@@ -60,11 +60,13 @@ int main()
 
    BinarySearchTree<int>* newBst = new BinarySearchTree<int>();
 
+   //use for loop to read the file
    for(int i = 0; i < size; i++){
 	   if (i == size - 1)
 		   size++;	//expand size to read new line
 
 	   cin >> letter;
+	   //do insert
 	   if (letter == 'I'){
 		   cin >> xCor >> yCor >> id;
 		   (*newBst).insert(xCor, yCor, id);
