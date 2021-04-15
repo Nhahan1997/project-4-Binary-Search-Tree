@@ -44,9 +44,10 @@ protected:
 	BinarySearchTree<DataType>* _left;	//left child of root
 	BinarySearchTree<DataType>* _right;	//right child of root
 	BinarySearchTree<DataType>* _yTree;
-	BinarySearchTree<DataType>** inOrderArray;
+//	BinarySearchTree<DataType>** inOrderArray;
 
 	int ID;
+//	int k;
 	bool _subtree;	//subtree
 	virtual BinarySearchTree<DataType>* makeSubtree();	//create a new subtree
 	virtual void copyTree (BinarySearchTree<DataType>* bst);
@@ -69,9 +70,14 @@ public:
     // returns the left subtree
 	virtual BinarySearchTree<DataType>* right ();
     // returns the right subtree
+	virtual BinarySearchTree<DataType>* left (BinarySearchTree<DataType>* bst);
+	// setter for the left subtree
+	virtual BinarySearchTree<DataType>* right (BinarySearchTree<DataType>* bst);
+	// setter the right subtree
 	virtual BinarySearchTree<DataType>* yTree ();
 	// returns the yTree of xNode
-	virtual BinarySearchTree<DataType>** getInOrderArray ();
+	virtual BinarySearchTree<DataType>* setYTree(BinarySearchTree<DataType>* bst);
+//	virtual BinarySearchTree<DataType>** getInOrderArray ();
 	virtual bool subtree();
 	virtual void makeEmpty ();
 	virtual void find (const DataType& x, const DataType& y);
@@ -89,6 +95,7 @@ public:
 	virtual void inOrder_yTreeDisplay();
 	virtual void preOrder_xTreeDisplay();
 	virtual void preOrder_yTreeDisplay();
+	virtual void yBalance(const DataType& x);
 
 
 
@@ -97,9 +104,10 @@ public:
 //print BST in in-order traversal
 template <class DataType>
 ostream& operator<< (ostream& s,  BinarySearchTree<DataType>& X) {
-//	if (!X.isEmpty()){
-//	s << *(X.left()) << " " << X.root() << " " << *(X.right()) ;
+//	if(!X.isEmpty()){
+//		s << *(X.left()) << " " << X.root() << " " << *(X.right());
 //	}
+
 	cout << "INORDER  TRAVERSAL: ";
 	cout << endl;
 	X.inOrder_xTreeDisplay();
@@ -119,7 +127,7 @@ BinarySearchTree<DataType>::BinarySearchTree ()
 	_yTree = NULL;
 	ID = 0;
 	_subtree = false;
-	inOrderArray = new BinarySearchTree<DataType>*[0];
+//	inOrderArray = new BinarySearchTree<DataType>*[0];
 }
 // --------------------------------------------------------------
 template <class DataType>
@@ -131,10 +139,10 @@ BinarySearchTree<DataType>::BinarySearchTree (const DataType& data)
 	_left = makeSubtree ();
 	_right = makeSubtree ();
 	_yTree = NULL;
-	inOrderArray = new BinarySearchTree<DataType>*[this->size()];
-	for (int i = 0; i < this->size(); i++){
-		inOrderArray[i] = NULL;
-	}
+//	inOrderArray = new BinarySearchTree<DataType>*[this->size()];
+//	for (int i = 0; i < this->size(); i++){
+//		inOrderArray[i] = NULL;
+//	}
 	ID = 0;
 }
 // --------------------------------------------------------------
@@ -143,7 +151,9 @@ void BinarySearchTree<DataType>::inOrder_xTreeDisplay(){
 	if (!this->left()->isEmpty()){		// if left child not null, print it by using recursive
 		this->left()->inOrder_xTreeDisplay();
 	}
+
 	cout << this->root() << ": " << endl;	//print the root
+
 	if (!this->yTree()->isEmpty()){
 		this->yTree()->inOrder_yTreeDisplay();	// if _yTree not null, call the inOrder_yTreeDisplay
 	}
@@ -260,11 +270,31 @@ BinarySearchTree<DataType>* BinarySearchTree<DataType>::right (){ return _right;
 // returns the right subtree
 // --------------------------------------------------------------
 template <class DataType>
+BinarySearchTree<DataType>* BinarySearchTree<DataType>::left (BinarySearchTree<DataType>* bst)
+{
+	return _left = bst;
+}
+// setter the left subtree
+// --------------------------------------------------------------
+template <class DataType>
+BinarySearchTree<DataType>* BinarySearchTree<DataType>::right (BinarySearchTree<DataType>* bst)
+{
+	return _right = bst;
+}
+// setter the right subtree
+// --------------------------------------------------------------
+template <class DataType>
 BinarySearchTree<DataType>* BinarySearchTree<DataType>::yTree (){ return _yTree; }
 // returns the yTree of xNode
 // --------------------------------------------------------------
 template <class DataType>
-BinarySearchTree<DataType>** BinarySearchTree<DataType>::getInOrderArray (){ return inOrderArray; }
+BinarySearchTree<DataType>* BinarySearchTree<DataType>::setYTree (BinarySearchTree<DataType>* bst){
+	return _yTree = bst;
+}
+// set bst to yTree
+// --------------------------------------------------------------
+//template <class DataType>
+//BinarySearchTree<DataType>** BinarySearchTree<DataType>::getInOrderArray (){ return inOrderArray; }
 // returns the yTree of xNode
 // --------------------------------------------------------------
 template <class DataType>
@@ -335,17 +365,22 @@ void BinarySearchTree<DataType>::find (const DataType& x, const DataType& y)
 		if (bst->isEmpty()) throw BinarySearchTreeNotFound();
 		if (bst->root() == x){
 			BinarySearchTree<DataType>* bst2 = bst->_yTree->_find(y);
+			if (bst->isEmpty()) throw BinarySearchTreeNotFound();
 			if (bst2->root() == y)
 				cout<<"\nThe coordinate "<<bst->root()<< ", " << bst2->root()
 				<< " is found in the tree with ID value " << bst2->ID  << endl;
-			//return bst->root();
 		}
+
 	}
 	catch(BinarySearchTreeNotFound e)
 	{
 		cout<<"\nSorry!!! Coordinate is not found in the X tree";
 		cout<<endl;
-		//return q;
+	}
+	catch(BinaryTreeEmptyTree e)
+	{
+		cout<<"\nSorry!!! Coordinate is not found in the X tree";
+		cout<<endl;
 	}
 }
 // --------------------------------------------------------------
@@ -380,8 +415,9 @@ void BinarySearchTree<DataType>::insert (const DataType& x, const DataType& y, i
 		// check if temp1->_yTree is NULL
 		if (temp1->_yTree == NULL){
 			BinarySearchTree<DataType>* yTree = new BinarySearchTree<DataType>(y);	//if it is null create new yTree with root is y coordinate
+			yTree->ID = IDT;	//pass the IDT to ID of x-y coordinate
 			temp1->_yTree = yTree;		//store yTree to _yTree of temp1
-			temp1->_yTree->ID = IDT;	//pass the IDT to ID of x-y coordinate
+
 		}
 		else{	//if searchBST is not empty
 			//  create new BST pointer object temp2 and use _insert to pass the y coordinate to BST->yTree
@@ -486,36 +522,44 @@ void BinarySearchTree<DataType>::remove(const DataType& x, const DataType& y){
 		}
 		else{
 			temp2->_remove(y);
-			if (temp2->isEmpty())
+			if(temp1->_yTree->size() == 0)
 				temp1->_remove(x);
 		}
 	}
 }
 // --------------------------------------------------------------
 template <class DataType>
-void BinarySearchTree<DataType>::_rangeSearch (const DataType& low, const DataType& high)
+void BinarySearchTree<DataType>::_rangeSearch (const DataType& lowY, const DataType& highY)
 {
 	if (isEmpty()) return;
-	if (*_root >= low)
-    {
-        _left->_rangeSearch(low,high);
-		if (*_root <= high)
-		{
+	if (*_root >= lowY){
+		_left->_rangeSearch(lowY, highY);
+		if (*_root <= highY)
 			cout << *_root << " ";
-		}
-    }
-	if (*_root <= high)
-        _right->_rangeSearch(low,high);
+	}
+	if (*_root <= highY)
+		_right->_rangeSearch(lowY, highY);
 }
 // --------------------------------------------------------------
 template <class DataType>
 void BinarySearchTree<DataType>::rangeSearch(const DataType& low, const DataType& high, const DataType& lowY, const DataType& highY)
 {
-	if(isEmpty()) return;
+	if (isEmpty()) return;
+	if (*_root >= low)
+	{
+		_left->rangeSearch(low, high, lowY, highY);
+		if (*_root <= high)
+		{
+			int x = *_root;
+			cout << x << " : ";
+			BinarySearchTree<DataType>* temp1 = _find(x);
+			temp1->_yTree->_rangeSearch(lowY, highY);
+			cout << endl;
+		}
+	}
+	if (*_root <= high)
+		_right->rangeSearch(low, high, lowY, highY);
 
-	this->_rangeSearch(low, high);
-	cout << ": ";
-	this->_left->_rangeSearch(lowY, highY);
 }
 // --------------------------------------------------------------
 template <class DataType>
@@ -527,8 +571,8 @@ BinarySearchTree<DataType>* BinarySearchTree<DataType>::GlobalRebalance(BinarySe
 	{
 		mid = ((l + r) / 2);
 		temp = inOrderArray[mid];
-//		temp->left() = GlobalRebalance(inOrderArray, l, mid - 1);
-//		temp->right() = GlobalRebalance(inOrderArray, mid + 1, r);
+		temp->left((GlobalRebalance(inOrderArray, l, mid - 1)));
+		temp->right((GlobalRebalance(inOrderArray, mid + 1, r)));
 	}
 
 	return temp;
@@ -541,28 +585,19 @@ int BinarySearchTree<DataType>::getInorderTraversal(BinarySearchTree<DataType>* 
 		if (node->isEmpty()) throw BinarySearchTreeNotFound();
 	}
 	catch(BinarySearchTreeNotFound e){
-//		cout << "No tree for inorder traversal";
-//		cout << endl;
-		return index;
+		 return index;
 	}
-
-//	cout << "value: " << this->root() << endl;
-//	cout << "left: " << *(this->left()->_root) << endl;
-//	cout << "right: " << *(this->right()->_root) << endl;
 
 	if (!this->isEmpty()) {
 		if(node->left()->_root != NULL)
 		{
-			// cout << "\tcalling left" << endl;
 			index = node->left()->getInorderTraversal(node->left(), inOrderArray, index);
 		}
 
 		inOrderArray[index++] = node;
-		// cout << "index: " << index - 1 << " inOrderArray[i]: " << inOrderArray[index - 1]->root() << endl;
 
 		if(node->right()->_root != NULL)
 		{
-			// cout << "\tcalling right" << endl;
 			index = node->right()->getInorderTraversal(node->right(), inOrderArray, index);
 		}
 	}
@@ -570,9 +605,22 @@ int BinarySearchTree<DataType>::getInorderTraversal(BinarySearchTree<DataType>* 
 }
 // --------------------------------------------------------------
 template <class DataType>
+void BinarySearchTree<DataType>::yBalance(const DataType& x){
+	BinarySearchTree<DataType>* temp1 = _find(x);
+	BinarySearchTree<DataType>* temp2 = temp1->_yTree;
+	int size = temp2->size();
+	BinarySearchTree<DataType>** inOrderArray = new BinarySearchTree<DataType>*[size];
+	for (int i = 0; i < size; i++){
+		inOrderArray[i] = new BinarySearchTree<DataType>();
+	}
+	getInorderTraversal(temp2, inOrderArray, 0);
+	temp1->setYTree(GlobalRebalance(inOrderArray, 0, size-1));
+
+
+}
+// --------------------------------------------------------------
+template <class DataType>
 void BinarySearchTree<DataType>::print(){
-//	BinarySearchTree<DataType>* bst = this;
-//	cout << *bst << endl;
 	cout << *this << endl;
 }
 

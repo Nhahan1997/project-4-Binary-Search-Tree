@@ -6,8 +6,8 @@
 
 int main()
 {
-//    BinarySearchTree<int> bst (100);
-//
+    BinarySearchTree<int> bst (100);
+
 //    cout <<"Initially the tree has  "<< bst << endl;
 //
 //    bst._insert (20);
@@ -21,10 +21,10 @@ int main()
 //
 //    bst._insert (25);
 //    cout <<"After Insertion of 25:  "<< bst << endl;
-//
+
 //    cout << "Trying to find 30..." << endl;
 //    try {
-//            bst.find(30);
+//            bst._find(30);
 //    }
 //    catch (BinarySearchTreeNotFound e) {
 //        cout << "Element 30 not found!!" << endl;
@@ -35,19 +35,20 @@ int main()
 //
 //    cout << "Trying to find 25..." << endl;
 //    try {
-//            bst.find(25);
+//            bst._find(25);
 //    }
 //    catch (BinarySearchTreeNotFound e) {
 //        cout << "Element 25 not found!!" << endl;
 //    }
-//
-//    bst.remove(100);
+ //   bst._rangeSearch(0, 300);
+
+//    bst._remove(100);
 //    cout<<"After removal of 100:"<<bst<<endl;
 //
-//    bst.remove(20);
+//    bst._remove(20);
 //    cout<<"After removal of 20:"<<bst<<endl;
 //
-//    bst.remove(10);
+//    bst._remove(10);
 //    cout<<"After removal of 10:"<<bst<<endl;
 
 
@@ -61,6 +62,7 @@ int main()
    BinarySearchTree<int>* newBst = new BinarySearchTree<int>();
 
    //use for loop to read the file
+
    for(int i = 0; i < size; i++){
 	   if (i == size - 1)
 		   size++;	//expand size to read new line
@@ -87,9 +89,7 @@ int main()
 		   cin >> low >> high >> lowY >> highY;
 		   cout << low << " " << high << " ";
 		   cout << lowY << " " << highY << endl;
-		   (*newBst).rangeSearch(lowY, highY, lowY, highY);
-		   cout << endl;
-
+		   (*newBst).rangeSearch(low, high, lowY, highY);
 	   }
 	   //do find
 	   if (letter == 'F'){
@@ -100,8 +100,9 @@ int main()
 	   //do balance the yTree
 	   if (letter == 'Y'){
 		   cout << "Y tree balance" << endl;
-		   cin >> yCor;
-		   cout << yCor << endl;
+		   cin >> xCor;
+		   cout << xCor << endl;
+		   (*newBst).yBalance(xCor);
 
 	   }
 	   //print
